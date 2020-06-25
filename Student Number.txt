@@ -1,0 +1,52 @@
+import pandas as pd
+import numpy as np
+import openpyxl
+
+StuNum=[]
+data = pd.read_csv("./Student Number.csv",header=None)
+data.columns=["n","x"]
+data=data.drop(columns="x")
+#data.head()
+StuNum=np.array(data.n)
+def chunker(seq, size):
+    return (seq[pos:pos + size] for pos in range(0, len(seq), size))
+Final_result=[]
+for k in StuNum:
+    temp=str(k)
+    studentnumlist=[]
+    for i in range(8):
+        studentnumlist.append(temp[i])  
+        
+    listof2=[]
+    for group in chunker(studentnumlist, 2):
+                listof2.append(group)
+    
+    temp2=np.array(listof2).ravel()
+    temp2=list(temp2.astype(int))
+    
+    temp3 = temp2+temp2[::-1]
+    
+    temp4 = []
+    for group in chunker(temp3, 2):
+        temp4.append(''.join(str(e) for e in group))
+    temp4 = np.array(temp4).astype(int)
+   
+    if temp3[8] == 0:
+        temp4
+    else:
+        temp4[0] = int(temp4[0]/temp3[8])
+        temp4
+        
+    A = []
+    for v in temp4:
+        if v not in A:
+            A.append(v)
+        else: A.append(v+1)
+    print(A) 
+            
+    Final_result.append(A)
+
+df = pd.DataFrame()
+df['Student Number'] = StuNum[::]
+df['CalStudent Number'] = Final_result[::]
+df.to_excel("New Number.xlsx")
